@@ -2,9 +2,9 @@ PyTorch implementation of Score-CAM
 ================================================================================
 
 This repository provides an unofficial PyTorch implementation of Score-CAM [1].
-Score-CAM is a CAM (class activation mapping) based visual explanation method
-like Grad-CAM and Grad-CAM++, but Score-CAM does not depend on gradients and
-can provide stable visual explanations.
+Score-CAM is a CAM (class activation mapping) [2] based visual explanation
+method like Grad-CAM [3] and Grad-CAM++ [4], but Score-CAM does not depend on
+gradients and can provide stable visual explanations.
 
 The features of this implementation are:
 
@@ -118,13 +118,17 @@ References
 
 [1] H. Wang, Z. Wang, M. Du, F. Yang, Z. Zhang, S. Ding, P. Mardziel, and X. Hu,
     "Score-CAM: Score-weighted visual explanations for convolutional neural networks",
-    CVPR, 2020. [PDF](https://arxiv.org/abs/1910.01279)
+    CVPR, 2020. [URL](https://arxiv.org/abs/1910.01279)
 
-[2] R. R. Selvaraju, M. Cogswell, A. Das, R. Vedantam, D. Parikh, and D. Batra,
+[2] M. Oquab, L. Bottou, I. Laptev, J. Sivic,
+    "Is Object Localization for Free? - Weakly-Supervised Learning With Convolutional Neural Networks",
+    CVPR, 2015. [URL](https://openaccess.thecvf.com/content_cvpr_2015/html/Oquab_Is_Object_Localization_2015_CVPR_paper.html)
+
+[3] R. R. Selvaraju, M. Cogswell, A. Das, R. Vedantam, D. Parikh, and D. Batra,
     "Grad-CAM: Visual Explanations From Deep Networks via Gradient-Based Localization",
-    ICCV, 2017. [PDF](https://arxiv.org/abs/1610.02391)
+    ICCV, 2017. [URL](https://arxiv.org/abs/1610.02391)
 
-[3] A. Chattopadhyay, A. Sarkar, P. Howlader, and V. Balasubramanian,
+[4] A. Chattopadhyay, A. Sarkar, P. Howlader, and V. Balasubramanian,
     "Grad-CAM++: Improved Visual Explanations for Deep Convolutional Networks",
-    WACV, 2018. [PDF](https://arxiv.org/abs/1710.11063)
+    WACV, 2018. [URL](https://arxiv.org/abs/1710.11063)
 
