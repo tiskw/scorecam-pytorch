@@ -115,16 +115,16 @@ L = scorecam.compute(x, coi=coi_fn)
 where `target_index` is an integer.
 
 
-What's the ScoreCAM?
+What's the Score-CAM?
 --------------------------------------------------------------------------------
 
-ScoreCAM is a CAM-based method to compute visual explanations for CNN.
+Score-CAM is a CAM-based method to compute visual explanations for CNN.
 The other CAM-based methods depend on the gradient of the output of CNN,
-but ScoreCAM does not.
-ScoreCAM scores each channel of the activation map by the prediction result of
+but Score-CAM does not.
+Score-CAM scores each channel of the activation map by the prediction result of
 a masked image which is defined as the Hadamard product of the input image and
 a channel of activation map.
-The following figure is a sketch of ScoreCAM procedure.
+The following figure is a sketch of Score-CAM procedure.
 
 <div align="center">
   <img src="./resources/scorecam_sketch.jpg" width="960" alt="Top image of Score-CAM" />
@@ -136,11 +136,11 @@ Additional function 1: CSKIP (channel skipping)
 
 ### Background
 
-One of the weak points of ScoreCAM is inference speed. Normally ScoreCAM is
+One of the weak points of Score-CAM is inference speed. Normally Score-CAM is
 much slower than other CAM-based methods like GradCAM or GradCAM++.
 It is considered a tradeoff of inference stability, but we can accelerate
-the computational time of ScoreCAM by a very simple trick.
-A cause of the long computation time is that ScoreCAM requires many forward
+the computational time of Score-CAM by a very simple trick.
+A cause of the long computation time is that Score-CAM requires many forward
 inferences to compute the output visual explanation.
 For example, if the number of channels of the activation map is 512, then
 forward inference of 512 images is required.
@@ -149,7 +149,7 @@ forward inference of 512 images is required.
 
 However, we can easily imagine that a only very limited number of channels of
 the activation maps contribute to the output visual explanation.
-This means that we can reduce the computational time of ScoreCAM by omitting
+This means that we can reduce the computational time of Score-CAM by omitting
 "unnecessary" activation maps from the calculation of the visual explanation.
 Although there may be many ideas on how to measure the "necessity" of each
 channel of the activation map, in this repository, we use the maximum value
@@ -160,7 +160,7 @@ So the acceleration procedure is summarized like the following:
 * Get an activation map from the input image,
 * Sort the channel of the activation map by the maximum value of each channel,
 * Keep only top `K` channels and drop other channels from the activation map,
-* Compute ScoreCAM visual explanation using the reduced activation map,
+* Compute Score-CAM visual explanation using the reduced activation map,
 
 where `K` is a hyperparameter. We call this method as CSKIP (Channel SKIPping).
 
@@ -188,7 +188,7 @@ with the following settings:
 * Class of interest: 242 (boxer)
 * Number of channels to be kept on CSKIP: 16
 
-As you can see, the visualization result of ScoreCAM with CSKIP is almost
+As you can see, the visualization result of Score-CAM with CSKIP is almost
 the same as the visualization without CSKIP, however, the computational time
 is much faster.
 
