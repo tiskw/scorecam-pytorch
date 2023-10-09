@@ -62,7 +62,7 @@ class ScoreCAM:
         """
         self.activation_map = x_out.detach().to("cpu")
 
-    def compute(self, X, coi, batch_size=128):
+    def compute(self, X, coi, batch_size=128, cskip=False, cskip_out=16):
         """
         Compute visual explanation.
 
@@ -70,6 +70,8 @@ class ScoreCAM:
             X          (np.ndarray or torch.Tensor): Input image.
             coi        (int or Callable)           : Class of interest.
             batch_size (int)                       : Batch size.
+            cskip      (bool)                      : Enable CSKIP optimization.
+            cskip_out  (int)                       : Output channels of the CSKIP.
 
         Returns:
             (torch.Tensor): 2D array of visual explanation.
@@ -101,13 +103,17 @@ class ScoreCAM:
         # Get the reference score.
         s_ref = self.scoring_fn(p.to("cpu"))
 
+        # Apply CSKIP if specified.
+        if cskip: A = channel_skipping(self.activation_map, cskip_out)
+        else    : A = self.activation_map
+
         # Get the channel number of the activation maps.
         # Note that the activation maps are always on CPU.
-        K = self.activation_map.shape[1]
+        K = A.shape[1]
 
         # Upsample the activation maps and change the dimension order
         # from [1, K, H, W] to [K, 1, H, W].
-        A = torch.nn.functional.interpolate(self.activation_map, (H, W), mode="bicubic")
+        A = torch.nn.functional.interpolate(A, (H, W), mode="bicubic")
         A = torch.permute(A, [1, 0, 2, 3])
 
         # Normalize the activation maps.
@@ -270,6 +276,23 @@ def normalize_activation_map(A, eps=1.0E-10):
 
     # Normalize the activation map.
     return (A - A_min) / (A_max - A_min + eps)
+
+
+def channel_skipping(A, cskip_out=16):
+    """
+    CSKIP optimization.
+
+    Args:
+        A         (torch.Tensor): Activation maps.
+        cskip_out (int)         : Number of output channels.
+    """
+    # Compute max value of each channel.
+    A_max, _ = torch.max(torch.flatten(A, start_dim=2), dim=2)
+
+    # Sort channels by the max value.
+    idx_max = torch.argsort(A_max.reshape([-1]), descending=True)
+
+    return A[:, idx_max[:cskip_out], :, :]
 
 
 # vim: expandtab tabstop=4 shiftwidth=4 fdm=marker
